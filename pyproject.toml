@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "binguistics"
+description = "Bingo"
+readme = "README.md"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Games/Entertainment :: Board Games",
+]
+dependencies = []
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = ["pytest", "flake8", "mypy", "black", "isort"]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools_scm]
+version_scheme = "python-simplified-semver"
+local_scheme = "no-local-version"
