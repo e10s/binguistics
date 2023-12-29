@@ -95,3 +95,33 @@ def test_init_104():
     assert c.state == good_s
     assert c._free == (0, 1, 4)
     assert c.free == (0, 1, 4)
+
+
+# graceful fillings
+
+
+def test_fill_1():
+    c = card.CardBase(2)
+    c.fill(2)
+    assert c.state == 0b01_00
+    c.fill(1)
+    assert c.state == 0b01_10
+    c.fill(0)
+    assert c.state == 0b01_11
+    c.fill(3)
+    assert c.state == 0b11_11
+
+
+# evil fillings
+
+
+def test_fill_2():
+    c = card.CardBase(2)
+    c.fill(-2)
+    assert c.state == 0b00_00
+    c.fill(1)
+    assert c.state == 0b00_10
+    c.fill(1)
+    assert c.state == 0b00_10
+    c.fill(100)
+    assert c.state == 0b00_10

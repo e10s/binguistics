@@ -119,3 +119,15 @@ class CardBase:
         """
 
         return self._free
+
+    def fill(self, square: int):
+        """
+        Fill a square whose ID is `square` if it exists in the card.
+
+        Parameters
+        ----------
+        square : int
+            The ID of the square.
+        """
+        if 0 <= square < self.size**2:
+            self._state |= 1 << square
