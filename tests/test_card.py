@@ -125,3 +125,44 @@ def test_fill_2():
     assert c.state == 0b00_10
     c.fill(100)
     assert c.state == 0b00_10
+
+
+def test_analyze_lines_1():
+    s = 0b000_010_001
+    c = card.CardBase(3, s)
+    assert c.analyze_lines(3) == ()
+    assert c.analyze_lines(2) == (card.LineMask(3).DIAGONAL_1,)
+    assert c.analyze_lines(1) == (
+        card.LineMask(3).ROW_0,
+        card.LineMask(3).ROW_1,
+        card.LineMask(3).COLUMN_0,
+        card.LineMask(3).COLUMN_1,
+        card.LineMask(3).DIAGONAL_2,
+    )
+    assert c.analyze_lines(0) == (
+        card.LineMask(3).ROW_2,
+        card.LineMask(3).COLUMN_2,
+    )
+
+    s = 0b001_000_001
+    f = (1, 2, 5)
+    c = card.CardBase(3, s, f)
+    assert c.analyze_lines(3) == (card.LineMask(3).ROW_0,)
+    assert c.analyze_lines(2) == (
+        card.LineMask(3).COLUMN_0,
+        card.LineMask(3).COLUMN_2,
+        card.LineMask(3).DIAGONAL_2,
+    )
+    assert c.analyze_lines(1) == (
+        card.LineMask(3).ROW_1,
+        card.LineMask(3).ROW_2,
+        card.LineMask(3).COLUMN_1,
+        card.LineMask(3).DIAGONAL_1,
+    )
+    assert c.analyze_lines(0) == ()
+
+    c = card.CardBase(3)
+    assert c.analyze_lines(0) == tuple(card.LineMask(3))
+
+    c = card.CardBase(3, free=range(3 * 3))
+    assert c.analyze_lines(3) == tuple(card.LineMask(3))

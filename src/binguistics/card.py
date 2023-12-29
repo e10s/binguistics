@@ -131,3 +131,22 @@ class CardBase:
         """
         if 0 <= square < self.size**2:
             self._state |= 1 << square
+
+    def analyze_lines(self, k: int) -> tuple:
+        """
+        Find out lines each of which is filled with `k` squares.
+
+        Parameters
+        ----------
+        k : int
+            Number of filled squares in a line.
+
+        Returns
+        -------
+        tuple
+            A tuple of `LineMask_"size"` members corresponding to the lines with `k` filled squares.
+        """
+
+        return tuple(
+            mask for mask in LineMask(self.size) if (self.state & mask).bit_count() == k
+        )
