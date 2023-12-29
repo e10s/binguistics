@@ -150,3 +150,20 @@ class CardBase:
         return tuple(
             mask for mask in LineMask(self.size) if (self.state & mask).bit_count() == k
         )
+
+    def is_bingo(self, k: int = 1) -> bool:
+        """
+        Whether at least `k` lines are fully filled.
+
+        Parameters
+        ----------
+        k : int, optional
+            Number of fully filled lines, by default 1
+
+        Returns
+        -------
+        bool
+            Return `True` if and only if at least `k` lines are fully filled.
+        """
+
+        return len(self.analyze_lines(self.size)) >= k

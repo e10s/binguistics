@@ -166,3 +166,40 @@ def test_analyze_lines_1():
 
     c = card.CardBase(3, free=range(3 * 3))
     assert c.analyze_lines(3) == tuple(card.LineMask(3))
+
+
+def test_is_bingo_1():
+    s = 0b0100_1010_0100_0001_1000
+    c = card.CardBase(4, s)
+    assert c.is_bingo(0)
+    assert not c.is_bingo(1)
+    assert not c.is_bingo(2)
+    assert not c.is_bingo(3)
+
+    s = 0b0100_1111_0100_0001_1000
+    c = card.CardBase(4, s)
+    assert c.is_bingo(0)
+    assert c.is_bingo(1)
+    assert not c.is_bingo(2)
+    assert not c.is_bingo(3)
+
+
+def test_is_bingo_2():
+    s = 0b110_010_111
+    c = card.CardBase(3, s)
+    assert c.is_bingo(0)
+    assert c.is_bingo(1)
+    assert c.is_bingo(2)
+    assert c.is_bingo(3)
+    assert not c.is_bingo(4)
+    assert not c.is_bingo(5)
+
+    s = 0b111_010_111
+    c = card.CardBase(3, s)
+    assert c.is_bingo(0)
+    assert c.is_bingo(1)
+    assert c.is_bingo(2)
+    assert c.is_bingo(3)
+    assert c.is_bingo(4)
+    assert c.is_bingo(5)
+    assert not c.is_bingo(6)
