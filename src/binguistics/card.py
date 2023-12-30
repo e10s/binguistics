@@ -167,3 +167,34 @@ class CardBase:
         """
 
         return len(self.analyze_lines(self.size)) >= k
+
+    def show(
+        self, blank: str = "\u2B1A", filled: str = "\u25A9", free: str = "\U0001F193"
+    ):
+        """
+        Pretty~print the card.
+
+        Parameters
+        ----------
+        blank : str, optional
+            String for blank squares, by default "\u2B1A" (Dotted Square)
+        filled : str, optional
+            String for filled squares, by default "\u25A9" (Square with Diagonal Crosshatch Fill)
+        free : str, optional
+            String for free squares, by default "\U0001F193" (Squared Free)
+        """
+
+        s = ""
+        m = self.size
+        for i in range(m):
+            for j in range(m):
+                k = i * m + j
+                if k in self.free:
+                    s += free
+                    continue
+                if self._state & (1 << k):
+                    s += filled
+                else:
+                    s += blank
+            s += "\n"
+        print(s, end="")

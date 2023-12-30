@@ -203,3 +203,17 @@ def test_is_bingo_2():
     assert c.is_bingo(4)
     assert c.is_bingo(5)
     assert not c.is_bingo(6)
+
+
+def test_show_1(capsys):
+    c = card.CardBase(3)
+    c.show(blank="0", filled="1", free="F")
+    out, _ = capsys.readouterr()
+    assert out == "000\n000\n000\n"
+
+    s = 0b000_010_011
+    f = (2,)
+    c = card.CardBase(3, s, f)
+    c.show(blank="0", filled="1", free="F")
+    out, _ = capsys.readouterr()
+    assert out == "11F\n010\n000\n"
