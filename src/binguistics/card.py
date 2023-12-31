@@ -44,6 +44,18 @@ class LineMask:
         return cls._instances[m]
 
 
+def _find_ones(nonneg_n: int) -> tuple[int]:
+    r = []
+    kth = 0
+
+    while nonneg_n > 0:
+        if nonneg_n & 1:
+            r.append(kth)
+        kth += 1
+        nonneg_n >>= 1
+    return tuple(r)
+
+
 class CardBase:
     """
     This is the base class that represents a bingo card.
@@ -180,6 +192,24 @@ class CardBase:
         """
 
         return bool(self.analyze_lines(self.size - 1))
+
+    def last_pieces_for_bingo(self) -> tuple[int]:
+        """
+        Find which square needs to be filled to complete a line missing only one square.
+
+        Returns
+        -------
+        tuple[int]
+            A tuple of IDs of squares such that each of them will complete
+            a line if it is filled.
+        """
+
+        from functools import reduce
+        from operator import or_
+
+        p = ((self.state & mask) ^ mask for mask in self.analyze_lines(self.size - 1))
+        a = reduce(or_, p, 0)
+        return _find_ones(a)
 
     def show(
         self, blank: str = "\u2B1A", filled: str = "\u25A9", free: str = "\U0001F193"

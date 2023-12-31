@@ -250,6 +250,49 @@ def test_is_ready_2():
     assert not c.is_ready()
 
 
+def test_last_pieces_for_bingo_1():
+    s = 0b011_000_000
+    c = card.CardBase(3, s)
+    assert c.last_pieces_for_bingo() == (8,)
+
+    s = 0b001_000_000
+    f = (4,)
+    c = card.CardBase(3, s, f)
+    assert c.last_pieces_for_bingo() == (2,)
+
+    s = 0b001_000_011
+    f = (4,)
+    c = card.CardBase(3, s, f)
+    assert c.last_pieces_for_bingo() == (2, 3, 7, 8)
+
+    s = 0b111_000_111
+    f = (5,)
+    c = card.CardBase(3, s, f)
+    assert c.last_pieces_for_bingo() == (3, 4)
+
+    s = 0b01110_11101_10111_10111_11011
+    f = (2, 20)
+    c = card.CardBase(5, s, f)
+    assert c.last_pieces_for_bingo() == (8, 13, 16, 24)
+
+def test_last_pieces_for_bingo_2():
+    c = card.CardBase(3)
+    assert not c.last_pieces_for_bingo()
+
+    s = 0b000_000_000
+    f = (4,)
+    c = card.CardBase(3, s, f)
+    assert not c.last_pieces_for_bingo()
+
+    s = 0b111_111_111
+    f = (4,)
+    c = card.CardBase(3, s, f)
+    assert not c.last_pieces_for_bingo()
+
+    s = 0b010_001_100
+    c = card.CardBase(3, s)
+    assert not c.last_pieces_for_bingo()
+
 def test_show_1(capsys):
     c = card.CardBase(3)
     c.show(blank="0", filled="1", free="F")
