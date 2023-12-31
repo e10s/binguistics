@@ -168,6 +168,19 @@ class CardBase:
 
         return len(self.analyze_lines(self.size)) >= k
 
+    def is_ready(self) -> bool:
+        """
+        Whether there is a square that will be a new completion of a line when it is filled.
+
+        Returns
+        -------
+        bool
+            Return `True` if and only if there is a square that will be a new completion
+            of a line when it is filled.
+        """
+
+        return bool(self.analyze_lines(self.size - 1))
+
     def show(
         self, blank: str = "\u2B1A", filled: str = "\u25A9", free: str = "\U0001F193"
     ):
