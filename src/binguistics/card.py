@@ -120,6 +120,19 @@ class CardBase:
         return self._state
 
     @property
+    def blank(self) -> tuple[int]:
+        """
+        Blank squares in the card, neither filled nor free.
+
+        Returns
+        -------
+        tuple[int]
+            IDs of the blank squares in the card.
+        """
+
+        return _find_ones(~self.state & ((1 << self.size**2) - 1))
+
+    @property
     def free(self) -> tuple[int]:
         """
         Free squares in the card.

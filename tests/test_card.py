@@ -1,6 +1,7 @@
 # pylint: disable=redefined-outer-name, unused-argument
 
 import pytest
+
 import binguistics.card as card
 
 
@@ -29,7 +30,8 @@ def test_init_1():
     assert c.size == 3
     assert c._state == 0
     assert c.state == 0
-    assert c.free == ()
+    assert c.blank == (0, 1, 2, 3, 4, 5, 6, 7, 8)
+    assert c._free == ()
     assert c.free == ()
 
 
@@ -40,6 +42,7 @@ def test_init_2():
     assert c.size == 4
     assert c._state == s
     assert c.state == s
+    assert c.blank == (0, 1, 2, 3, 4, 5, 9, 11, 12)
     assert c._free == ()
     assert c.free == ()
 
@@ -51,6 +54,7 @@ def test_init_3():
     c = card.CardBase(4, s, f)
     assert c._state == s_f
     assert c.state == s_f
+    assert c.blank == (0, 1, 3, 9, 11, 12)
     assert c._free == (2, 4, 5)
     assert c.free == (2, 4, 5)
 
@@ -64,6 +68,7 @@ def test_init_101():
     c = card.CardBase(4, free=bad_f)
     assert c._state == s_f
     assert c.state == s_f
+    assert c.blank == (0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
     assert c._free == (1, 2)
     assert c.free == (1, 2)
 
@@ -74,6 +79,7 @@ def test_init_102():
     c = card.CardBase(4, free=bad_f)
     assert c._state == s_f
     assert c.state == s_f
+    assert c.blank == (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
     assert c._free == (1,)
     assert c.free == (1,)
 
@@ -84,6 +90,7 @@ def test_init_103():
     c = card.CardBase(3, bad_s)
     assert c._state == good_s
     assert c.state == good_s
+    assert c.blank == (0, 2, 3, 4, 5, 6, 8)
 
 
 def test_init_104():
@@ -93,6 +100,7 @@ def test_init_104():
     c = card.CardBase(3, bad_s, bad_f)
     assert c._state == good_s
     assert c.state == good_s
+    assert c.blank == (2, 3, 5, 6, 8)
     assert c._free == (0, 1, 4)
     assert c.free == (0, 1, 4)
 
@@ -275,6 +283,7 @@ def test_last_pieces_for_bingo_1():
     c = card.CardBase(5, s, f)
     assert c.last_pieces_for_bingo() == (8, 13, 16, 24)
 
+
 def test_last_pieces_for_bingo_2():
     c = card.CardBase(3)
     assert not c.last_pieces_for_bingo()
@@ -292,6 +301,7 @@ def test_last_pieces_for_bingo_2():
     s = 0b010_001_100
     c = card.CardBase(3, s)
     assert not c.last_pieces_for_bingo()
+
 
 def test_show_1(capsys):
     c = card.CardBase(3)
