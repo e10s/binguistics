@@ -133,6 +133,19 @@ class CardBase:
         return _find_ones(~self.state & ((1 << self.size**2) - 1))
 
     @property
+    def filled(self) -> tuple[int]:
+        """
+        Filled squares in the card, not including free squares.
+
+        Returns
+        -------
+        tuple[int]
+            IDs of the filled squares in the card.
+        """
+
+        return tuple(i for i in _find_ones(self.state) if i not in self.free)
+
+    @property
     def free(self) -> tuple[int]:
         """
         Free squares in the card.

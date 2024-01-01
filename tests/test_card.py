@@ -31,6 +31,7 @@ def test_init_1():
     assert c._state == 0
     assert c.state == 0
     assert c.blank == (0, 1, 2, 3, 4, 5, 6, 7, 8)
+    assert c.filled == ()
     assert c._free == ()
     assert c.free == ()
 
@@ -43,6 +44,7 @@ def test_init_2():
     assert c._state == s
     assert c.state == s
     assert c.blank == (0, 1, 2, 3, 4, 5, 9, 11, 12)
+    assert c.filled == (6, 7, 8, 10, 13, 14, 15)
     assert c._free == ()
     assert c.free == ()
 
@@ -55,6 +57,7 @@ def test_init_3():
     assert c._state == s_f
     assert c.state == s_f
     assert c.blank == (0, 1, 3, 9, 11, 12)
+    assert c.filled == (6, 7, 8, 10, 13, 14, 15)
     assert c._free == (2, 4, 5)
     assert c.free == (2, 4, 5)
 
@@ -69,6 +72,7 @@ def test_init_101():
     assert c._state == s_f
     assert c.state == s_f
     assert c.blank == (0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+    assert c.filled == ()
     assert c._free == (1, 2)
     assert c.free == (1, 2)
 
@@ -80,6 +84,7 @@ def test_init_102():
     assert c._state == s_f
     assert c.state == s_f
     assert c.blank == (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+    assert c.filled == ()
     assert c._free == (1,)
     assert c.free == (1,)
 
@@ -91,6 +96,7 @@ def test_init_103():
     assert c._state == good_s
     assert c.state == good_s
     assert c.blank == (0, 2, 3, 4, 5, 6, 8)
+    assert c.filled == (1, 7)
 
 
 def test_init_104():
@@ -101,6 +107,7 @@ def test_init_104():
     assert c._state == good_s
     assert c.state == good_s
     assert c.blank == (2, 3, 5, 6, 8)
+    assert c.filled == (7,)
     assert c._free == (0, 1, 4)
     assert c.free == (0, 1, 4)
 
