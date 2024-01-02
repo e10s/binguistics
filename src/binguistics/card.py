@@ -1,7 +1,8 @@
 class LineMask:
     # Each instance is a singleton.
+    import enum
 
-    _instances = dict()
+    _instances: dict[int, enum.IntEnum] = dict()
 
     def __new__(cls, m):
         if m not in cls._instances:
@@ -44,7 +45,7 @@ class LineMask:
         return cls._instances[m]
 
 
-def _find_ones(nonneg_n: int) -> tuple[int]:
+def _find_ones(nonneg_n: int) -> tuple[int, ...]:
     r = []
     kth = 0
 
@@ -74,9 +75,11 @@ class CardBase:
         20 21 22 23 24
     """
 
-    from collections.abc import Iterable
+    import collections.abc
 
-    def __init__(self, size: int, state: int = 0, free: Iterable[int] = ()):
+    def __init__(
+        self, size: int, state: int = 0, free: collections.abc.Iterable[int] = ()
+    ):
         """
         Parameters
         ----------
@@ -115,12 +118,13 @@ class CardBase:
         Returns
         -------
         int
-            The card's current state, indicating which squares are filled and which are not.
+            The card's current state, indicating which squares are filled
+            and which are not.
         """
         return self._state
 
     @property
-    def blank(self) -> tuple[int]:
+    def blank(self) -> tuple[int, ...]:
         """
         Blank squares in the card, neither filled nor free.
 
@@ -133,7 +137,7 @@ class CardBase:
         return _find_ones(~self.state & ((1 << self.size**2) - 1))
 
     @property
-    def filled(self) -> tuple[int]:
+    def filled(self) -> tuple[int, ...]:
         """
         Filled squares in the card, not including free squares.
 
@@ -146,7 +150,7 @@ class CardBase:
         return tuple(i for i in _find_ones(self.state) if i not in self.free)
 
     @property
-    def free(self) -> tuple[int]:
+    def free(self) -> tuple[int, ...]:
         """
         Free squares in the card.
 
@@ -182,7 +186,8 @@ class CardBase:
         Returns
         -------
         tuple
-            A tuple of `LineMask_"size"` members corresponding to the lines with `k` filled squares.
+            A tuple of `LineMask_"size"` members corresponding to the lines
+            with `k` filled squares.
         """
 
         return tuple(
@@ -208,7 +213,8 @@ class CardBase:
 
     def is_ready(self) -> bool:
         """
-        Whether there is a square that will be a new completion of a line when it is filled.
+        Whether there is a square that will be a new completion of a line
+        when it is filled.
 
         Returns
         -------
@@ -219,7 +225,7 @@ class CardBase:
 
         return bool(self.analyze_lines(self.size - 1))
 
-    def last_pieces_for_bingo(self) -> tuple[int]:
+    def last_pieces_for_bingo(self) -> tuple[int, ...]:
         """
         Find which square needs to be filled to complete a line missing only one square.
 
@@ -241,14 +247,15 @@ class CardBase:
         self, blank: str = "\u2B1A", filled: str = "\u25A9", free: str = "\U0001F193"
     ):
         """
-        Pretty~print the card.
+        Pretty-print the card.
 
         Parameters
         ----------
         blank : str, optional
             String for blank squares, by default "\u2B1A" (Dotted Square)
         filled : str, optional
-            String for filled squares, by default "\u25A9" (Square with Diagonal Crosshatch Fill)
+            String for filled squares, by default "\u25A9"
+            (Square with Diagonal Crosshatch Fill)
         free : str, optional
             String for free squares, by default "\U0001F193" (Squared Free)
         """
