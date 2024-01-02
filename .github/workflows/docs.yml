@@ -27,7 +27,7 @@ jobs:
 
       - name: Build
         run: |
-          pdoc -o docs src/binguistics
+          pdoc -o docs -d numpy src/binguistics
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
