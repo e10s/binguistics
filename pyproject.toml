@@ -18,7 +18,7 @@ dependencies = []
 dynamic = ["version"]
 
 [project.optional-dependencies]
-dev = ["pytest", "flake8", "mypy", "black", "isort"]
+dev = ["pytest", "pytest-cov", "flake8", "mypy", "black", "isort"]
 
 [tool.setuptools]
 package-dir = { "" = "src" }
@@ -26,3 +26,6 @@ package-dir = { "" = "src" }
 [tool.setuptools_scm]
 version_scheme = "python-simplified-semver"
 local_scheme = "no-local-version"
+
+[tool.isort]
+profile = "black"
