@@ -1,34 +1,33 @@
 {
     "[python]": {
         "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
             "source.organizeImports": "explicit"
         },
-        "editor.defaultFormatter": "ms-python.black-formatter",
-        "editor.formatOnSave": true
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
+        "editor.indentSize": 4,
+        "editor.insertSpaces": true
+    },
+    "[yaml]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+        "editor.indentSize": 2,
+        "editor.insertSpaces": true
     },
     "autoDocstring.docstringFormat": "numpy",
     "autoDocstring.startOnNewLine": true,
     "coverage-gutters.showGutterCoverage": true,
     "coverage-gutters.showLineCoverage": false,
     "coverage-gutters.showRulerCoverage": false,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "explicit"
-    },
-    "editor.indentSize": 4,
-    "editor.insertSpaces": true,
-    "flake8.importStrategy": "fromEnvironment",
-    "isort.args": [
-        "--profile",
-        "black"
-    ],
-    "isort.importStrategy": "fromEnvironment",
     "mypy-type-checker.importStrategy": "fromEnvironment",
     "python.testing.pytestArgs": [
         "--cov=src",
-        "--cov-report",
-        "xml",
+        "--cov-report=xml",
         "tests"
     ],
     "python.testing.pytestEnabled": true,
-    "python.testing.unittestEnabled": false
+    "python.testing.unittestEnabled": false,
+    "yaml.format.enable": true
 }

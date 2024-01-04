@@ -1,9 +1,10 @@
 [build-system]
-requires = ["setuptools", "setuptools_scm"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [project]
 name = "binguistics"
+authors = [{ name = "Kazuya Takahashi" }]
 description = "Bingo"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -14,18 +15,19 @@ classifiers = [
     "Programming Language :: Python",
     "Topic :: Games/Entertainment :: Board Games",
 ]
+requires-python = ">=3.10"
 dependencies = []
 dynamic = ["version"]
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "flake8", "mypy", "black", "isort"]
+dev = ["pytest", "pytest-cov", "ruff", "mypy"]
 
-[tool.setuptools]
-package-dir = { "" = "src" }
+[tool.hatch]
 
-[tool.setuptools_scm]
-version_scheme = "python-simplified-semver"
-local_scheme = "no-local-version"
+[tool.hatch.version]
+source = "vcs"
 
-[tool.isort]
-profile = "black"
+[tool.ruff]
+ignore = []
+line-length = 88
+select = ["E", "F", "W"]
