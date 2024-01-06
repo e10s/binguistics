@@ -1,48 +1,77 @@
-class LineMask:
+import enum
+
+
+class _LineMaskFactory:
     # Each instance is a singleton.
-    import enum
 
-    _instances: dict[int, enum.IntEnum] = dict()
+    _instances: dict[int, enum.EnumMeta] = dict()
 
-    def __new__(cls, m):
+    @classmethod
+    def create(cls, m: int) -> enum.EnumMeta:
+        row_0 = 2**m - 1
+        col_0 = sum(1 << i for i in range(0, m**2, m))
+
+        LineMask_m = enum.IntEnum(  # type: ignore
+            f"LineMask_{m}",
+            dict(
+                [(f"ROW_{i}", row_0 << (m * i)) for i in range(m)]
+                + [
+                    (
+                        f"COLUMN_{i}",
+                        col_0 << i,
+                    )
+                    for i in range(m)
+                ]
+                + [
+                    (
+                        "DIAGONAL_1",
+                        sum(1 << i for i in range(0, m**2, m + 1)),
+                    ),
+                    (
+                        "DIAGONAL_2",
+                        sum(
+                            1 << i
+                            for i in range(
+                                m - 1,
+                                m**2 - m + 1,
+                                m - 1,
+                            )
+                        ),
+                    ),
+                ]
+            ),
+        )
+
+        return LineMask_m
+
+    @classmethod
+    def get(cls, m: int) -> enum.EnumMeta:
         if m not in cls._instances:
-            row_0 = 2**m - 1
-            col_0 = sum(1 << i for i in range(0, m**2, m))
-
-            import enum
-
-            cls._instances[m] = enum.IntEnum(
-                f"LineMask_{m}",
-                dict(
-                    [(f"ROW_{i}", row_0 << (m * i)) for i in range(m)]
-                    + [
-                        (
-                            f"COLUMN_{i}",
-                            col_0 << i,
-                        )
-                        for i in range(m)
-                    ]
-                    + [
-                        (
-                            "DIAGONAL_1",
-                            sum(1 << i for i in range(0, m**2, m + 1)),
-                        ),
-                        (
-                            "DIAGONAL_2",
-                            sum(
-                                1 << i
-                                for i in range(
-                                    m - 1,
-                                    m**2 - m + 1,
-                                    m - 1,
-                                )
-                            ),
-                        ),
-                    ]
-                ),
-            )
-
+            cls._instances[m] = cls.create(m)
         return cls._instances[m]
+
+
+def line_mask(size: int) -> enum.EnumMeta:
+    """
+    Return an `IntEnum` containing all rows, columns and diagonals in a card with
+    `size`. Each member can be evaluated as an integer and its set bits correspond
+    to the square IDs that make up a line.
+
+    Parameters
+    ----------
+    size : int
+        Card's size
+
+    Returns
+    -------
+    enum.EnumMeta
+        `LineMask_{size}`; `{size}` will be replaced by the actual value of `size`.
+
+    See Also
+    --------
+    CardBase : Defining the relationship between square IDs and the layout of a card.
+    """
+    return _LineMaskFactory.get(size)
 
 
 def _find_ones(nonneg_n: int) -> tuple[int, ...]:
@@ -174,7 +203,7 @@ class CardBase:
         if 0 <= square < self.size**2:
             self._state |= 1 << square
 
-    def analyze_lines(self, k: int) -> tuple:
+    def analyze_lines(self, k: int) -> tuple[enum.IntEnum, ...]:
         """
         Find out lines each of which is filled with `k` squares.
 
@@ -186,12 +215,16 @@ class CardBase:
         Returns
         -------
         tuple
-            A tuple of `LineMask_"size"` members corresponding to the lines
+            A tuple of `LineMask_{size}` members corresponding to the lines
             with `k` filled squares.
         """
+        from collections.abc import Iterable
+        from typing import cast
 
         return tuple(
-            mask for mask in LineMask(self.size) if (self.state & mask).bit_count() == k
+            mask
+            for mask in cast(Iterable[enum.IntEnum], line_mask(self.size))
+            if (self.state & mask).bit_count() == k
         )
 
     def is_bingo(self, k: int = 1) -> bool:
