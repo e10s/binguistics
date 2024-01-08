@@ -8,13 +8,13 @@ def test_line_mask_1():
     mask3 = card.line_mask(3)
     assert len(mask3) == 8
 
-    assert mask3.ROW_0 == 0b000_000_111
-    assert mask3.ROW_1 == 0b000_111_000
-    assert mask3.ROW_2 == 0b111_000_000
+    assert mask3.COLUMN_0 == 0b000_000_111
+    assert mask3.COLUMN_1 == 0b000_111_000
+    assert mask3.COLUMN_2 == 0b111_000_000
 
-    assert mask3.COLUMN_0 == 0b001_001_001
-    assert mask3.COLUMN_1 == 0b010_010_010
-    assert mask3.COLUMN_2 == 0b100_100_100
+    assert mask3.ROW_0 == 0b001_001_001
+    assert mask3.ROW_1 == 0b010_010_010
+    assert mask3.ROW_2 == 0b100_100_100
 
     assert mask3.DIAGONAL_1 == 0b100_010_001
     assert mask3.DIAGONAL_2 == 0b001_010_100
@@ -147,30 +147,30 @@ def test_analyze_lines_1():
     assert c.analyze_lines(3) == ()
     assert c.analyze_lines(2) == (card.line_mask(3).DIAGONAL_1,)
     assert c.analyze_lines(1) == (
-        card.line_mask(3).ROW_0,
-        card.line_mask(3).ROW_1,
         card.line_mask(3).COLUMN_0,
         card.line_mask(3).COLUMN_1,
+        card.line_mask(3).ROW_0,
+        card.line_mask(3).ROW_1,
         card.line_mask(3).DIAGONAL_2,
     )
     assert c.analyze_lines(0) == (
-        card.line_mask(3).ROW_2,
         card.line_mask(3).COLUMN_2,
+        card.line_mask(3).ROW_2,
     )
 
     s = 0b001_000_001
     f = (1, 2, 5)
     c = card.CardBase(3, s, f)
-    assert c.analyze_lines(3) == (card.line_mask(3).ROW_0,)
+    assert c.analyze_lines(3) == (card.line_mask(3).COLUMN_0,)
     assert c.analyze_lines(2) == (
-        card.line_mask(3).COLUMN_0,
-        card.line_mask(3).COLUMN_2,
+        card.line_mask(3).ROW_0,
+        card.line_mask(3).ROW_2,
         card.line_mask(3).DIAGONAL_2,
     )
     assert c.analyze_lines(1) == (
-        card.line_mask(3).ROW_1,
-        card.line_mask(3).ROW_2,
         card.line_mask(3).COLUMN_1,
+        card.line_mask(3).COLUMN_2,
+        card.line_mask(3).ROW_1,
         card.line_mask(3).DIAGONAL_1,
     )
     assert c.analyze_lines(0) == ()
@@ -320,4 +320,4 @@ def test_show_1(capsys):
     c = card.CardBase(3, s, f)
     c.show(blank="0", filled="1", free="F")
     out, _ = capsys.readouterr()
-    assert out == "11F\n010\n000\n"
+    assert out == "100\n110\nF00\n"

@@ -1,3 +1,4 @@
+import collections.abc
 import enum
 
 
@@ -14,10 +15,10 @@ class _LineMaskFactory:
         LineMask_m = enum.IntEnum(  # type: ignore
             f"LineMask_{m}",
             dict(
-                [(f"ROW_{i}", row_0 << (m * i)) for i in range(m)]
+                [(f"COLUMN_{i}", row_0 << (m * i)) for i in range(m)]
                 + [
                     (
-                        f"COLUMN_{i}",
+                        f"ROW_{i}",
                         col_0 << i,
                     )
                     for i in range(m)
@@ -90,21 +91,24 @@ class CardBase:
     """
     This is the base class that represents a bingo card.
 
-    A card has four important attributes: size, state, square ID, and free squares.
+    A card has four important attributes:
+    * size
+    * state
+    * square IDs
+    * free squares
+
     If a card has a size of `n`, that means the card has `n*n` squares.
     The state of a card shows which squares are filled and which are not.
     It is an `n*n`-bit integer and its set bits correspond to filled squares.
     The `k`-th bit of a state integer means the square with the ID of `k`.
     For example, on a bingo card of size 5, the IDs are arranged as follows.
 
-         0  1  2  3  4
-         5  6  7  8  9
-        10 11 12 13 14
-        15 16 17 18 19
-        20 21 22 23 24
+        0 5 10 15 20
+        1 6 11 16 21
+        2 7 12 17 22
+        3 8 13 18 23
+        4 9 14 19 24
     """
-
-    import collections.abc
 
     def __init__(
         self, size: int, state: int = 0, free: collections.abc.Iterable[int] = ()
@@ -295,13 +299,13 @@ class CardBase:
 
         s = ""
         m = self.size
-        for i in range(m):
-            for j in range(m):
-                k = i * m + j
-                if k in self.free:
+        for row in range(m):
+            for col in range(m):
+                square = col * m + row
+                if square in self.free:
                     s += free
                     continue
-                if self._state & (1 << k):
+                if self._state & (1 << square):
                     s += filled
                 else:
                     s += blank
