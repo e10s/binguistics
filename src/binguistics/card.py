@@ -8,34 +8,36 @@ class _LineMaskFactory:
     _instances: dict[int, enum.EnumMeta] = dict()
 
     @classmethod
-    def create(cls, m: int) -> enum.EnumMeta:
-        row_0 = 2**m - 1
-        col_0 = sum(1 << i for i in range(0, m**2, m))
+    def create(cls, size: int) -> enum.EnumMeta:
+        if size < 2:
+            raise ValueError("size must be greater than or equal to 2")
+        row_0 = 2**size - 1
+        col_0 = sum(1 << i for i in range(0, size**2, size))
 
         LineMask_m = enum.IntEnum(  # type: ignore
-            f"LineMask_{m}",
+            f"LineMask_{size}",
             dict(
-                [(f"COLUMN_{i}", row_0 << (m * i)) for i in range(m)]
+                [(f"COLUMN_{i}", row_0 << (size * i)) for i in range(size)]
                 + [
                     (
                         f"ROW_{i}",
                         col_0 << i,
                     )
-                    for i in range(m)
+                    for i in range(size)
                 ]
                 + [
                     (
                         "DIAGONAL_1",
-                        sum(1 << i for i in range(0, m**2, m + 1)),
+                        sum(1 << i for i in range(0, size**2, size + 1)),
                     ),
                     (
                         "DIAGONAL_2",
                         sum(
                             1 << i
                             for i in range(
-                                m - 1,
-                                m**2 - m + 1,
-                                m - 1,
+                                size - 1,
+                                size**2 - size + 1,
+                                size - 1,
                             )
                         ),
                     ),
@@ -46,10 +48,10 @@ class _LineMaskFactory:
         return LineMask_m
 
     @classmethod
-    def get(cls, m: int) -> enum.EnumMeta:
-        if m not in cls._instances:
-            cls._instances[m] = cls.create(m)
-        return cls._instances[m]
+    def get(cls, size: int) -> enum.EnumMeta:
+        if size not in cls._instances:
+            cls._instances[size] = cls.create(size)
+        return cls._instances[size]
 
 
 def line_mask(size: int) -> enum.EnumMeta:

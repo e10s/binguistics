@@ -1,5 +1,5 @@
 # pylint: disable=redefined-outer-name, unused-argument
-
+import pytest
 
 import binguistics.card as card
 
@@ -18,6 +18,26 @@ def test_line_mask_1():
 
     assert mask3.DIAGONAL_1 == 0b100_010_001
     assert mask3.DIAGONAL_2 == 0b001_010_100
+
+
+def test_line_mask_2():
+    mask2 = card.line_mask(2)
+    assert len(mask2) == 6
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_line_mask_101():
+    card.line_mask(-3)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_line_mask_102():
+    card.line_mask(1)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_line_mask_103():
+    card.line_mask(0)
 
 
 # graceful initializations & getters
