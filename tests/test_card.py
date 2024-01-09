@@ -1,7 +1,6 @@
 # pylint: disable=redefined-outer-name, unused-argument
-import pytest
-
 import binguistics.card as card
+import pytest
 
 
 def test_line_mask_1():
@@ -96,39 +95,66 @@ def test_init_101():
     assert c.free == (1, 2)
 
 
+@pytest.mark.xfail(raises=ValueError)
 def test_init_102():
     bad_f = (-1, 1, -111, 200, 200)
-    s_f = 0b0000_0000_0000_0010
-    c = card.CardBase(4, free=bad_f)
-    assert c._state == s_f
-    assert c.state == s_f
-    assert c.blank == (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
-    assert c.filled == ()
-    assert c._free == (1,)
-    assert c.free == (1,)
+    card.CardBase(4, free=bad_f)
 
 
+@pytest.mark.xfail(raises=ValueError)
 def test_init_103():
     bad_s = 0b11_000_010_000_010
-    good_s = 0b010_000_010
-    c = card.CardBase(3, bad_s)
-    assert c._state == good_s
-    assert c.state == good_s
-    assert c.blank == (0, 2, 3, 4, 5, 6, 8)
-    assert c.filled == (1, 7)
+    card.CardBase(3, bad_s)
 
 
+@pytest.mark.xfail(raises=ValueError)
 def test_init_104():
     bad_f = (1, 0, 1, -1, -12, 999, 4)
     bad_s = 0b11_000_010_000_010
-    good_s = 0b010_010_011
-    c = card.CardBase(3, bad_s, bad_f)
-    assert c._state == good_s
-    assert c.state == good_s
-    assert c.blank == (2, 3, 5, 6, 8)
-    assert c.filled == (7,)
-    assert c._free == (0, 1, 4)
-    assert c.free == (0, 1, 4)
+    card.CardBase(3, bad_s, bad_f)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_init_201():
+    card.CardBase(1)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_init_202():
+    s = 0b1110_0101_1100_0000
+    card.CardBase(0, s)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_init_203():
+    s = 0b1110_0101_1100_0000
+    f = (5, 2, 4)
+    card.CardBase(-4, s, f)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_init_301():
+    bad_f = (1, 1, 1, 2)
+    card.CardBase(-4, free=bad_f)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_init_302():
+    bad_f = (-1, 1, -111, 200, 200)
+    card.CardBase(1, free=bad_f)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_init_303():
+    bad_s = 0b11_000_010_000_010
+    card.CardBase(-3, bad_s)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_init_304():
+    bad_f = (1, 0, 1, -1, -12, 999, 4)
+    bad_s = 0b11_000_010_000_010
+    card.CardBase(-3, bad_s, bad_f)
 
 
 # graceful fillings
@@ -203,14 +229,14 @@ def test_analyze_lines_1():
 
 
 def test_is_bingo_1():
-    s = 0b0100_1010_0100_0001_1000
+    s = 0b1010_0100_0001_1000
     c = card.CardBase(4, s)
     assert c.is_bingo(0)
     assert not c.is_bingo(1)
     assert not c.is_bingo(2)
     assert not c.is_bingo(3)
 
-    s = 0b0100_1111_0100_0001_1000
+    s = 0b1111_0100_0001_1000
     c = card.CardBase(4, s)
     assert c.is_bingo(0)
     assert c.is_bingo(1)
@@ -237,6 +263,34 @@ def test_is_bingo_2():
     assert c.is_bingo(4)
     assert c.is_bingo(5)
     assert not c.is_bingo(6)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_is_bingo_101():
+    s = 0b1010_0100_0001_1000
+    c = card.CardBase(4, s)
+    c.is_bingo(-1)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_is_bingo_102():
+    s = 0b1111_0100_0001_1000
+    c = card.CardBase(4, s)
+    c.is_bingo(-2)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_is_bingo_103():
+    s = 0b110_010_111
+    c = card.CardBase(3, s)
+    c.is_bingo(-3)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_is_bingo_104():
+    s = 0b111_010_111
+    c = card.CardBase(3, s)
+    c.is_bingo(-100)
 
 
 def test_is_ready_1():

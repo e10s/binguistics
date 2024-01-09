@@ -78,6 +78,8 @@ def line_mask(size: int) -> enum.EnumMeta:
 
 
 def _find_ones(nonneg_n: int) -> tuple[int, ...]:
+    if nonneg_n < 0:
+        raise ValueError("negative value")
     r = []
     kth = 0
 
@@ -125,13 +127,22 @@ class CardBase:
         free : Iterable[int], optional
             IDs of free squares, by default ()
         """
-
+        if size < 2:
+            raise ValueError("size must be greater than or equal to 2")
         self._size = size
-        coverall_mask = (1 << size**2) - 1
-        self._state = state & coverall_mask
-        self._free = tuple(sorted(set(i for i in free if 0 <= i < size**2)))
-        for i in self._free:
+
+        if state < 0 or state.bit_length() > size**2:
+            raise ValueError("state must be less than or equal to size**2 bits")
+        self._state = state
+
+        tmp_free = set()
+
+        for i in free:
+            if not (0 <= i < size**2):
+                raise ValueError("out of range")
+            tmp_free.add(i)
             self._state |= 1 << i
+        self._free = tuple(sorted(tmp_free))
 
     @property
     def size(self) -> int:
@@ -248,6 +259,8 @@ class CardBase:
             Return `True` if and only if at least `k` lines are fully filled.
         """
 
+        if k < 0:
+            raise ValueError("negative value")
         return len(self.analyze_lines(self.size)) >= k
 
     def is_ready(self) -> bool:
