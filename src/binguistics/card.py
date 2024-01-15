@@ -326,3 +326,72 @@ class CardBase:
                     s += blank
             s += "\n"
         print(s, end="")
+
+
+class Card(CardBase):
+    """
+    This class represents a concrete bingo card.
+    Each non-free square has its own label in addition to the four important attributes:
+    * size
+    * state
+    * square IDs
+    * free squares
+
+    which are defined in `CardBase`. This new property allows you to
+    fill any square with a particular label by specifying the label.
+
+    For example, on a bingo card of size 5, the IDs are arranged as follows.
+
+        0 5 10 15 20
+        1 6 11 16 21
+        2 7 12 17 22
+        3 8 13 18 23
+        4 9 14 19 24
+
+    In this case, custom labels are arranged as follows.
+
+        <label of ID 0> ... <label of ID 20>
+        <label of ID 1> ... <label of ID 21>
+        <label of ID 2> ... <label of ID 22>
+        <label of ID 3> ... <label of ID 23>
+        <label of ID 4> ... <label of ID 24>
+
+    If the squares with ID 3 and 20 are free, they have no labels.
+
+        <label of ID 0> ...      <FREE>
+        <label of ID 1> ... <label of ID 21>
+        <label of ID 2> ... <label of ID 22>
+             <FREE>     ... <label of ID 23>
+        <label of ID 4> ... <label of ID 24>
+    """
+
+    def __init__(
+        self,
+        size: int,
+        labels: collections.abc.Iterable[object],
+        state: int = 0,
+        free: collections.abc.Iterable[int] = (),
+    ):
+        """
+        Parameters
+        ----------
+        size : int
+            Card's size
+        labels : Iterable[object]
+            Labels of non-free squares, in order of increasing ID.
+        state : int, optional
+            Initial state, by default 0
+        free : Iterable[int], optional
+            IDs of free squares, by default ()
+
+        See Also
+        --------
+        CardBase :
+            Defining the structure of a card and the meaning of
+            the parameters, except `labels`, are the same.
+        """
+
+        super().__init__(size, state=state, free=free)
+
+        sq_id_it = filter(lambda x: x not in free, range(size**2))
+        self._square_table = dict(zip(sq_id_it, labels, strict=True))
