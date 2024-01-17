@@ -77,3 +77,52 @@ def test_init_105():
     long_ll = (3, 1, 4, 1, 5, 9, 2, 6, 5, 3)
     f = (5, 6)
     card.Card(3, long_ll, free=f)
+
+
+def test_label_1():
+    ll = range(16)
+    s = 0b1110_0101_1100_0000
+    c = card.Card(4, ll, s)
+    assert [c.label(i) for i in range(16)] == list(range(16))
+
+
+def test_label_2():
+    ll = range(13)
+    s = 0b1110_0101_1100_0000
+    f = (5, 2, 4)
+    c = card.Card(4, ll, s, f)
+    assert [c.label(i) for i in range(16)] == [0, 1, None, 2, None, None] + list(
+        range(3, 13)
+    )
+
+
+def test_label_3():
+    ll = [None] * 14
+    bad_f = (1, 1, 1, 2)
+    c = card.Card(4, ll, free=bad_f)
+    assert [c.label(i) for i in range(16)] == [None] * 16
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_label_101():
+    ll = range(16)
+    s = 0b1110_0101_1100_0000
+    c = card.Card(4, ll, s)
+    c.label(-1)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_label_102():
+    ll = range(13)
+    s = 0b1110_0101_1100_0000
+    f = (5, 2, 4)
+    c = card.Card(4, ll, s, f)
+    c.label(16)
+
+
+@pytest.mark.xfail(raises=ValueError)
+def test_label_103():
+    ll = [None] * 23
+    bad_f = (1, 1, 1, 2)
+    c = card.Card(5, ll, free=bad_f)
+    c.label(29)

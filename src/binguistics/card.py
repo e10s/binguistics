@@ -395,3 +395,23 @@ class Card(CardBase):
 
         sq_id_it = filter(lambda x: x not in free, range(size**2))
         self._square_table = dict(zip(sq_id_it, labels, strict=True))
+
+    def label(self, square: int):
+        """
+        Return the label of a square whose ID is `square`.
+
+        Parameters
+        ----------
+        square : int
+            The ID of the square.
+
+        Returns
+        -------
+        object
+            The square's label.
+        """
+
+        if not (0 <= square < self.size**2):
+            raise ValueError("out of range")
+
+        return self._square_table.get(square)
