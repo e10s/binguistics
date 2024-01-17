@@ -27,6 +27,9 @@ dev = ["pytest", "pytest-cov", "ruff", "mypy"]
 [tool.hatch.version]
 source = "vcs"
 
+[tool.pytest.ini_options]
+xfail_strict = true
+
 [tool.ruff]
 ignore = []
 line-length = 88
