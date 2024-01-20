@@ -396,7 +396,7 @@ class Card(CardBase):
         sq_id_it = filter(lambda x: x not in free, range(size**2))
         self._square_table = dict(zip(sq_id_it, labels, strict=True))
 
-    def label(self, square: int):
+    def label(self, square: int) -> object:
         """
         Return the label of a square whose ID is `square`.
 
