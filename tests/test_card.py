@@ -126,3 +126,59 @@ def test_label_103():
     bad_f = (1, 1, 1, 2)
     c = card.Card(5, ll, free=bad_f)
     c.label(29)
+
+
+# graceful fillings
+
+
+def test_fill_by_label_1():
+    ll = (100, 200, 300, 400)
+    c = card.Card(2, ll)
+    c.fill_by_label(300)
+    assert c.state == 0b01_00
+    c.fill_by_label(200)
+    assert c.state == 0b01_10
+    c.fill_by_label(100)
+    assert c.state == 0b01_11
+    c.fill_by_label(400)
+    assert c.state == 0b11_11
+
+
+# evil fillings
+
+
+def test_fill_by_label_2():
+    ll = (100, 200, 300, 400)
+    c = card.Card(2, ll)
+    c.fill_by_label(-100)
+    assert c.state == 0b00_00
+    c.fill_by_label(-200)
+    assert c.state == 0b00_00
+    c.fill_by_label(100)
+    assert c.state == 0b00_01
+    c.fill_by_label(100)
+    assert c.state == 0b00_01
+
+
+def test_fill_by_label_3():
+    ll = [range(33), [2], iter, [2]]
+    c = card.Card(2, ll)
+    c.fill_by_label(iter)
+    assert c.state == 0b01_00
+    c.fill_by_label((2,))
+    assert c.state == 0b01_00
+    c.fill_by_label([2])
+    assert c.state == 0b11_10
+    c.fill_by_label(range(33))
+    assert c.state == 0b11_11
+
+
+def test_fill_by_label_4():
+    ll = (100, 200, 100, 100)
+    c = card.Card(2, ll)
+    c.fill_by_label(100)
+    assert c.state == 0b11_01
+    c.fill_by_label(100)
+    assert c.state == 0b11_01
+    c.fill_by_label(200)
+    assert c.state == 0b11_11

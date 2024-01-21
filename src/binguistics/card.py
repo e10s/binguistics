@@ -415,3 +415,17 @@ class Card(CardBase):
             raise ValueError("out of range")
 
         return self._square_table.get(square)
+
+    def fill_by_label(self, label: object):
+        """
+        Fill all squares whose label is `label` if they exist on the card.
+
+        Parameters
+        ----------
+        label : object
+            The label of the square.
+        """
+
+        for k, v in self._square_table.items():
+            if label == v:
+                self.fill(k)
