@@ -56,7 +56,7 @@ class _LineMaskFactory:
 
 def line_mask(size: int) -> enum.EnumMeta:
     """
-    Return an `IntEnum` containing all rows, columns and diagonals in a card with
+    Return an `IntEnum` containing all rows, columns and diagonals on a card with
     `size`. Each member can be evaluated as an integer and its set bits correspond
     to the square IDs that make up a line.
 
@@ -172,12 +172,12 @@ class CardBase:
     @property
     def blank(self) -> tuple[int, ...]:
         """
-        Blank squares in the card, neither filled nor free.
+        Blank squares on the card, neither filled nor free.
 
         Returns
         -------
         tuple[int]
-            IDs of the blank squares in the card.
+            IDs of the blank squares on the card.
         """
 
         return _find_ones(~self.state & ((1 << self.size**2) - 1))
@@ -185,12 +185,12 @@ class CardBase:
     @property
     def filled(self) -> tuple[int, ...]:
         """
-        Filled squares in the card, not including free squares.
+        Filled squares on the card, not including free squares.
 
         Returns
         -------
         tuple[int]
-            IDs of the filled squares in the card.
+            IDs of the filled squares on the card.
         """
 
         return tuple(i for i in _find_ones(self.state) if i not in self.free)
@@ -198,19 +198,19 @@ class CardBase:
     @property
     def free(self) -> tuple[int, ...]:
         """
-        Free squares in the card.
+        Free squares on the card.
 
         Returns
         -------
         tuple[int]
-            IDs of the free squares in the card.
+            IDs of the free squares on the card.
         """
 
         return self._free
 
     def fill(self, square: int):
         """
-        Fill a square whose ID is `square` if it exists in the card.
+        Fill a square whose ID is `square` if it exists on the card.
 
         Parameters
         ----------
